@@ -1,0 +1,54 @@
+
+body {
+  font-family: sans-serif;
+  background: #f4f4f4;
+  padding: 20px;
+}
+.container {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+}
+h1, h2 {
+  margin-top: 0;
+}
+.start-button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #007acc;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+.option {
+  display: block;
+  padding: 10px;
+  margin: 8px 0;
+  background: #eee;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  text-align: left;
+}
+.option:hover {
+  background: #ddd;
+}
+.correct {
+  background-color: #d4edda !important;
+}
+.wrong {
+  background-color: #f8d7da !important;
+}
+#feedback {
+  font-weight: bold;
+  margin-top: 10px;
+}
+#question {
+  margin-top: 20px;
+  font-size: 18px;
+  white-space: pre-wrap;
+}
