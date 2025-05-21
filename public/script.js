@@ -2,16 +2,29 @@
 let currentAnswer = "";
 
 function nextQuestion() {
-  document.getElementById("feedback").innerText = "";
-  const container = document.getElementById("options");
-  container.innerHTML = "";
+  const questionDiv = document.getElementById("question");
+  const optionsDiv = document.getElementById("options");
+  const feedbackDiv = document.getElementById("feedback");
+
+  if (!Array.isArray(verbi) || verbi.length === 0) {
+    questionDiv.innerText = "⚠️ Nessun dato caricato.";
+    return;
+  }
+
+  feedbackDiv.innerText = "";
+  optionsDiv.innerHTML = "";
 
   const tipo = Math.floor(Math.random() * 4);
   const verbo = verbi[Math.floor(Math.random() * verbi.length)];
 
+  if (!verbo || !verbo.forme_flesse || verbo.forme_flesse.length === 0) {
+    questionDiv.innerText = "⚠️ Verbo non valido o privo di forme flesse.";
+    return;
+  }
+
   if (tipo === 0 || tipo === 1) {
     const forma = verbo.forme_flesse[Math.floor(Math.random() * verbo.forme_flesse.length)];
-    document.getElementById("question").innerText =
+    questionDiv.innerText =
       tipo === 0
         ? `Qual è l'analisi grammaticale della forma: "${forma.forma}"?`
         : `Cosa significa in italiano la forma: "${forma.forma}"?`;
@@ -24,10 +37,14 @@ function nextQuestion() {
 
     const opzioni = new Set([corretta]);
     while (opzioni.size < 4) {
-      const randForma = verbi[Math.floor(Math.random() * verbi.length)].forme_flesse[0];
+      const randVerbo = verbi[Math.floor(Math.random() * verbi.length)];
+      const randForma = randVerbo.forme_flesse ? randVerbo.forme_flesse[0] : null;
+      if (!randForma) continue;
+
       const opzione = tipo === 0
         ? `${randForma.modo} ${randForma.tempo} – ${randForma.persona}`
         : randForma.traduzione;
+
       opzioni.add(opzione);
     }
 
@@ -36,7 +53,7 @@ function nextQuestion() {
       btn.className = "option";
       btn.innerText = opt;
       btn.onclick = () => checkAnswer(btn, opt);
-      container.appendChild(btn);
+      optionsDiv.appendChild(btn);
     });
 
   } else if (tipo === 2) {
@@ -44,7 +61,7 @@ function nextQuestion() {
     const domanda = parte === "perfetto"
       ? `${verbo.verbo}, ${verbo.infinito}, _____, ${verbo.supino}`
       : `${verbo.verbo}, ${verbo.infinito}, ${verbo.perfetto}, _____`;
-    document.getElementById("question").innerText = `Completa il paradigma:\n${domanda}`;
+    questionDiv.innerText = `Completa il paradigma:\n${domanda}`;
 
     currentAnswer = parte === "perfetto" ? verbo.perfetto : verbo.supino;
     const opzioni = new Set([currentAnswer]);
@@ -59,19 +76,19 @@ function nextQuestion() {
       btn.className = "option";
       btn.innerText = opt;
       btn.onclick = () => checkAnswer(btn, opt);
-      container.appendChild(btn);
+      optionsDiv.appendChild(btn);
     });
 
   } else if (tipo === 3) {
     const forma = verbo.forme_flesse[Math.floor(Math.random() * verbo.forme_flesse.length)];
-    document.getElementById("question").innerText =
+    questionDiv.innerText =
       `Qual è la forma del verbo "${verbo.infinito}" al ${forma.modo} ${forma.tempo}, ${forma.persona}?`;
 
     currentAnswer = forma.forma;
     const opzioni = new Set([currentAnswer]);
 
     while (opzioni.size < 4) {
-      const rand = verbi[Math.floor(Math.random() * verbi.length)].forme_flesse[0];
+      const rand = verbi[Math.floor(Math.random() * verbi.length)].forme_flesse?.[0];
       if (rand) opzioni.add(rand.forma);
     }
 
@@ -80,7 +97,7 @@ function nextQuestion() {
       btn.className = "option";
       btn.innerText = opt;
       btn.onclick = () => checkAnswer(btn, opt);
-      container.appendChild(btn);
+      optionsDiv.appendChild(btn);
     });
   }
 }
